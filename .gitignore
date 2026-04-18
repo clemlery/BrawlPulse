@@ -1,0 +1,101 @@
+# ============================================================
+#  BrawlPulse — .gitignore
+#  Monorepo: Ktor backend / discord.js bot / PostgreSQL
+# ============================================================
+
+# ------------------------------------------------------------
+#  Environment variables & secrets
+# ------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.jks
+secrets/
+
+# ------------------------------------------------------------
+#  Kotlin / Ktor backend (Gradle)
+# ------------------------------------------------------------
+backend/.gradle/
+backend/build/
+backend/out/
+backend/local.properties
+
+# IntelliJ / IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# ------------------------------------------------------------
+#  Discord bot (Node.js)
+# ------------------------------------------------------------
+bot/node_modules/
+bot/dist/
+bot/.npm/
+
+# Node logs
+bot/logs/
+bot/*.log
+bot/npm-debug.log*
+bot/yarn-debug.log*
+bot/yarn-error.log*
+
+# ------------------------------------------------------------
+#  Database
+# ------------------------------------------------------------
+# Local dumps
+db/*.sql.gz
+db/*.dump
+db/data/
+
+# Docker PostgreSQL volume (if mounted locally)
+postgres-data/
+pgdata/
+
+# ------------------------------------------------------------
+#  Docker
+# ------------------------------------------------------------
+# Local overrides should not be versioned
+docker-compose.override.yml
+
+# ------------------------------------------------------------
+#  Operating system
+# ------------------------------------------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# ------------------------------------------------------------
+#  Editors
+# ------------------------------------------------------------
+# VS Code
+.vscode/
+!.vscode/extensions.json
+
+# Vim / Emacs
+*.swp
+*.swo
+*.bak
+\#*\#
+.\#*
+
+# ------------------------------------------------------------
+#  Misc
+# ------------------------------------------------------------
+*.log
+*.tmp
+*.cache
+.turbo/
