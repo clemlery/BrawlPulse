@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:18
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    networks:
+      - backend
+    ports:
+        - "5432:5432"
+  server:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    networks:
+      - backend
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "$$API_SCHEME://$$API_HOST:$$API_PORT/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  postgresql_data:
+
+networks:
+  backend:
+    driver: bridge
+    name: backend
