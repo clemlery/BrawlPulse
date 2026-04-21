@@ -9,6 +9,10 @@
 -- - tracked_players: Master table of monitored players with identity mappings
 -- - daily_snapshots: Time-series data capturing daily player statistics and ratings
 
+-- creating brawlpulse database and using it
+CREATE DATABASE brawlpulse;
+\connect brawlpulse;
+
 -- tracked_players table
 CREATE TABLE tracked_players (
     id SERIAL PRIMARY KEY,
@@ -16,15 +20,15 @@ CREATE TABLE tracked_players (
     brawlhalla_id INT,
     current_name TEXT,
     all_names TEXT[] UNIQUE,
-    added_at TIMESTAMPTZ,
+    added_at TIMESTAMPTZ
 );
 
 -- tracked_players table comments
-COMMENT ON COLUMN tracked_players.steam_id 'Provided by the user for now';
-COMMENT ON COLUMN tracked_players.brawlhalla_id 'Resolved from the brawlhlla API';
-COMMENT ON COLUMN tracked_players.current_name 'Last known in game name';
-COMMENT ON COLUMN tracked_players.all_names 'All names changed by this player';
-COMMENT ON COLUMN tracked_players.added_at 'DEFAULT NOW()';
+COMMENT ON COLUMN tracked_players.steam_id IS 'Provided by the user for now';
+COMMENT ON COLUMN tracked_players.brawlhalla_id IS 'Resolved from the brawlhlla API';
+COMMENT ON COLUMN tracked_players.current_name IS 'Last known in game name';
+COMMENT ON COLUMN tracked_players.all_names IS 'All names changed by this player';
+COMMENT ON COLUMN tracked_players.added_at IS 'DEFAULT NOW()';
 
 -- daily_snapshots table
 CREATE TABLE daily_snapshots (
@@ -36,15 +40,15 @@ CREATE TABLE daily_snapshots (
     rating INT,
     peak_rating INT,
     legend_raw JSONB,
-    created_at TIMESTAMPZ,
-        CONSTRAINT fk_Person
-    FOREIGN KEY (PersonID)
-    REFERENCES Persons(PersonID)
+    created_at TIMESTAMPTZ,
+    CONSTRAINT fk_player_id
+    FOREIGN KEY (player_id)
+    REFERENCES tracked_players(id)
 )
 
--- daily_snapshots table comments 
-COMMENT ON COLUMN daily_snapshots.player_id 'CASCADE DELETE';
-COMMENT ON COLUMN daily_snapshots.snapshot_date 'DEFAULT CURRENT_DATE';
-COMMENT ON COLUMN daily_snapshots.rating 'Global ELO';
-COMMENT ON COLUMN daily_snapshots.legends_raw 'Full per-legend stats';
-COMMENT ON COLUMN daily_snapshots.created_at 'DEFAULT NOW()'
+-- daily_snapshots table comments  
+COMMENT ON COLUMN daily_snapshots.player_id IS 'CASCADE DELETE';
+COMMENT ON COLUMN daily_snapshots.snapshot_date IS 'DEFAULT CURRENT_DATE';
+COMMENT ON COLUMN daily_snapshots.rating IS 'Global ELO';
+COMMENT ON COLUMN daily_snapshots.legends_raw IS 'Full per-legend stats';
+COMMENT ON COLUMN daily_snapshots.created_at IS 'DEFAULT NOW()';
