@@ -1,2 +1,1 @@
-CREATE USER backend WITH PASSWORD 'admin';
 GRANT ALL PRIVILEGES ON DATABASE brawlpulse TO backend;

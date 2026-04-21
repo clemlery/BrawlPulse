@@ -9,12 +9,8 @@
 -- - tracked_players: Master table of monitored players with identity mappings
 -- - daily_snapshots: Time-series data capturing daily player statistics and ratings
 
--- creating brawlpulse database and using it
-CREATE DATABASE brawlpulse;
-\connect brawlpulse;
-
 -- tracked_players table
-CREATE TABLE tracked_players (
+CREATE TABLE IF NOT EXISTS tracked_players (
     id SERIAL PRIMARY KEY,
     steam_id  BIGINT UNIQUE,
     brawlhalla_id INT,
@@ -31,7 +27,7 @@ COMMENT ON COLUMN tracked_players.all_names IS 'All names changed by this player
 COMMENT ON COLUMN tracked_players.added_at IS 'DEFAULT NOW()';
 
 -- daily_snapshots table
-CREATE TABLE daily_snapshots (
+CREATE TABLE IF NOT EXISTS daily_snapshots (
     id SERIAL PRIMARY KEY,
     player_id INT,
     snapshot_date DATE,
@@ -39,12 +35,12 @@ CREATE TABLE daily_snapshots (
     games INT,
     rating INT,
     peak_rating INT,
-    legend_raw JSONB,
+    legends_raw JSONB,
     created_at TIMESTAMPTZ,
     CONSTRAINT fk_player_id
     FOREIGN KEY (player_id)
     REFERENCES tracked_players(id)
-)
+);
 
 -- daily_snapshots table comments  
 COMMENT ON COLUMN daily_snapshots.player_id IS 'CASCADE DELETE';
