@@ -1,4 +1,11 @@
 services:
+  bot:
+    build: 
+      context: ./bot
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - server
   db:
     image: postgres:18
     restart: always
