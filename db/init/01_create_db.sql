@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS daily_snapshots (
     FOREIGN KEY (player_id)
     REFERENCES tracked_players(id)
 );
+CREATE UNIQUE INDEX IF NOT EXISTS idx_player_id_snapshot_date ON daily_snapshots (player_id, snapshot_date DESC);
 
 -- daily_snapshots table comments  
 COMMENT ON COLUMN daily_snapshots.player_id IS 'CASCADE DELETE';
