@@ -1,16 +1,23 @@
 services:
+  bot:
+    build: 
+      context: ./bot
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - server
   db:
     image: postgres:18
     restart: always
     env_file:
       - .env
     volumes:
-      - postgresql_data:/var/lib/postgresql/data
+      - postgresql_data:/var/lib/postgresql
       - ./db/init:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test: ["CMD-SHELL", "pg_isready", "-d", "backend"]
       interval: 30s
-      timeout: 10s
+      timeout: 60s
       retries: 5
       start_period: 40s
     networks:
