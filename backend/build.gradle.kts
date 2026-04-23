@@ -2,6 +2,7 @@ val exposed_version: String by project
 val h2_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
+val hikariVersion: String by project
 
 plugins {
     kotlin("jvm") version "2.3.0"
@@ -13,7 +14,7 @@ group = "com.brawlpulse.api"
 version = "0.0.1"
 
 application {
-    mainClass = "io.ktor.server.netty.EngineMain"
+    mainClass = "com.brawlpulse.api.ApplicationKt"
 }
 
 java {
@@ -46,4 +47,7 @@ dependencies {
     implementation("io.ktor:ktor-server-config-yaml")
     testImplementation("io.ktor:ktor-server-test-host")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    implementation("com.zaxxer:HikariCP:${hikariVersion}")
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+    implementation("org.postgresql:postgresql:42.7.4")
 }
