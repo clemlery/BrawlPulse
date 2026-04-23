@@ -22,7 +22,7 @@ jwt:
   audience: "jwt-audience"
   realm: "ktor sample app"
 db:
-  jdbcUrl: "jdbc:postgresql://localhost:5432/brawlpulse"
+  jdbcUrl: "jdbc:postgresql://0.0.0.0:5432/brawlpulse"
   driver: "org.postgresql.Driver"
   username: ${POSTGRES_USER}
   password: ${POSTGRES_PASSWORD}
