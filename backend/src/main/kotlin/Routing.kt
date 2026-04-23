@@ -27,13 +27,15 @@ fun Application.configureRouting() {
         }
     }
     routing {
-        get("/") {
-            call.respondText("Hello World!")
+        route("/health") {
+            get("/live") {
+                call.respond(HttpStatusCode.OK)
+            }
+            get("/ready") {
+                TODO()
+            }
         }
-        get<Articles> { article ->
-            // Get all articles ...
-            call.respond("List of articles sorted starting from ${article.sort}")
-        }
+
     }
 }
 
