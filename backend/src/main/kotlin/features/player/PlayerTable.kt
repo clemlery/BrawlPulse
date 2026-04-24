@@ -1,14 +1,17 @@
 package com.brawlpulse.api.features.player
 
-import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.Table.Dual.index
-import org.jetbrains.exposed.sql.Table.Dual.integer
-import org.jetbrains.exposed.sql.Table.Dual.long
-import org.jetbrains.exposed.sql.Table.Dual.text
+import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.javatime.timestampWithTimeZone
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
-object PlayerTable : IntIdTable("players_tracked")
-    val steam_id = long("steam_id").index(isUnique = true)
-    val brawlhalla_id = integer("brawlhalla_id")
-    val current_name = text("current_name")
-    val all_names = 
+object PlayerTable : Table("players_tracked") {
+    val id = integer("id").autoIncrement()
+    val steamId = long("steam_id").uniqueIndex()
+    val brawlhallaId = integer("brawlhalla_id").uniqueIndex()
+    val currentName = text("current_name")
+    val addedAt = timestampWithTimeZone("added_at")
+        .clientDefault { OffsetDateTime.now(ZoneOffset.UTC) }
+
+    override val primaryKey = PrimaryKey(id)
 }

@@ -1,0 +1,30 @@
+package com.brawlpulse.api.features.snapshot
+
+data class Legend(
+    val legendId : Int,
+    val legendNameKey : String,
+    val damageDealt : String,
+    val damageTaken : String,
+    val kos : Int,
+    val falls : Int,
+    val suicides : Int,
+    val teamkos : Int,
+    val matchtime : Int,
+    val games : Int,
+    val wins : Int,
+    val damageUnarmed : String,
+    val damageThrownItem : String,
+    val damageWeaponOne : String,
+    val damageWeaponTwo : String,
+    val damageGadgets : String,
+    val koUnarmed : Int,
+    val koThrownItem : Int,
+    val koWeaponOne : Int,
+    val koWeaponTwo : Int,
+    val koGadgets : Int,
+    val timeHeldWeaponOne : Int,
+    val timeHeldWeaponTwo : Int,
+    val xp : Int,
+    val level : Int,
+    val xpPercentage : Double
+)
