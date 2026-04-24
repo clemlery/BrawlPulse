@@ -1,5 +1,10 @@
 package com.brawlpulse.api
 
+import com.brawlpulse.api.plugins.configureDatabases
+import com.brawlpulse.api.plugins.configureMonitoring
+import com.brawlpulse.api.plugins.configureRouting
+import com.brawlpulse.api.plugins.configureSecurity
+import com.brawlpulse.api.plugins.configureSerialization
 import io.github.cdimascio.dotenv.dotenv
 import io.ktor.server.application.*
 

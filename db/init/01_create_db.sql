@@ -12,13 +12,20 @@
 -- tracked_players table
 CREATE TABLE IF NOT EXISTS tracked_players (
     id SERIAL PRIMARY KEY,
-    steam_id  BIGINT UNIQUE,
-    brawlhalla_id INT,
-    current_name TEXT,
-    all_names TEXT[] UNIQUE,
-    added_at TIMESTAMPTZ
+    steam_id BIGINT UNIQUE NOT NULL,
+    brawlhalla_id INT UNIQUE NOT NULL,
+    current_name TEXT NOT NULL,
+    added_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS player_names (
+    player_id INT NOT NULL REFERENCES tracked_players(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    seen_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (player_id, name)
+);
+
+CREATE INDEX idx_player_names_name ON player_names(name);
 -- tracked_players table comments
 COMMENT ON COLUMN tracked_players.steam_id IS 'Provided by the user for now';
 COMMENT ON COLUMN tracked_players.brawlhalla_id IS 'Resolved from the brawlhlla API';
