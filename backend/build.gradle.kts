@@ -35,6 +35,8 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json")
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-java-time:${exposed_version}")
+    implementation("org.jetbrains.exposed:exposed-json:${exposed_version}")
     implementation("com.h2database:h2:$h2_version")
     implementation("io.ktor:ktor-server-resources")
     implementation("io.ktor:ktor-server-call-logging")
