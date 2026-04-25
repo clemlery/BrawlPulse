@@ -11,7 +11,6 @@ object PlayerTable : Table("players_tracked") {
     val brawlhallaId = integer("brawlhalla_id").uniqueIndex()
     val currentName = text("current_name")
     val addedAt = timestampWithTimeZone("added_at")
-        .clientDefault { OffsetDateTime.now(ZoneOffset.UTC) }
 
     override val primaryKey = PrimaryKey(id)
 }

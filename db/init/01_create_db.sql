@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS tracked_players (
 CREATE TABLE IF NOT EXISTS player_names (
     player_id INT NOT NULL REFERENCES tracked_players(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
-    seen_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    last_seen_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     PRIMARY KEY (player_id, name)
 );
 

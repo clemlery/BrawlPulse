@@ -12,7 +12,6 @@ object PlayerNamesTable : Table("player_names") {
     val name = text("name")
         .index()
     val lastSeenAt = timestampWithTimeZone("last_seen_at")
-        .clientDefault { OffsetDateTime.now(ZoneOffset.UTC) }
 
     override val primaryKey = PrimaryKey(playerId, name)
 }
