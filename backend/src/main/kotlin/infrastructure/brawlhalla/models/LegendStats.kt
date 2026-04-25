@@ -1,10 +1,10 @@
-package com.brawlpulse.api.features.snapshot
+package com.brawlpulse.api.infrastructure.brawlhalla.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Legend(
+data class LegendStats(
     @SerialName("legend_id") val legendId: Int,
     @SerialName("legend_name_key") val legendNameKey: String,
     @SerialName("damagedealt") val damageDealt: String,
