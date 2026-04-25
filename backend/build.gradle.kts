@@ -52,4 +52,5 @@ dependencies {
     implementation("com.zaxxer:HikariCP:${hikariVersion}")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation("org.postgresql:postgresql:42.7.4")
+    implementation("io.ktor:ktor-client-core}")
 }
