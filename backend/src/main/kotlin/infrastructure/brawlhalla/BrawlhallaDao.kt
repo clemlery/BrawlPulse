@@ -1,6 +1,5 @@
 package com.brawlpulse.api.infrastructure.brawlhalla
 
-import com.brawlpulse.api.common.exceptions.*
 import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsGlobalResponse
 import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsRankedResponse
 import com.brawlpulse.api.infrastructure.brawlhalla.models.SearchPlayerResponse
