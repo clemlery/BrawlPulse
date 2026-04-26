@@ -1,6 +1,5 @@
 package com.brawlpulse.api.infrastructure.brawlhalla
 
-import com.brawlpulse.api.common.exceptions.*
 import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsGlobalResponse
 import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsRankedResponse
 import com.brawlpulse.api.infrastructure.brawlhalla.models.SearchPlayerResponse
@@ -51,12 +50,12 @@ class BrawlhallaDao {
     }
 
     suspend fun searchPlayer(
-        steamId : String,
+        steamId : Long,
         apiKey : String
     ) : SearchPlayerResponse {
         val response = client.get(Constants.SEARCH_PLAYER_URL) {
             url {
-                parameters.append("steamid", steamId)
+                parameters.append("steamid", steamId.toString())
                 parameters.append("api_key", apiKey)
             }
         }
