@@ -1,6 +1,4 @@
-package com.brawlpulse.api.features.player
-
-// Exceptions
+package com.brawlpulse.api.features.player.exceptions
 
 sealed class PlayerServiceException(
     message: String? = null,
@@ -16,10 +14,3 @@ class BrawlhallaApiUnavailableException(
     message: String? = null,
     cause: Throwable? = null
 ) : PlayerServiceException(message, cause)
-
-// Results
-
-sealed class AddPlayerResult {
-    data class Created(val player: Player) : AddPlayerResult()
-    data class AlreadyTracked(val player: Player) : AddPlayerResult()
-}
