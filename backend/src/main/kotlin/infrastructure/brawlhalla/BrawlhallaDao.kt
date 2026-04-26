@@ -50,12 +50,12 @@ class BrawlhallaDao {
     }
 
     suspend fun searchPlayer(
-        steamId : String,
+        steamId : Long,
         apiKey : String
     ) : SearchPlayerResponse {
         val response = client.get(Constants.SEARCH_PLAYER_URL) {
             url {
-                parameters.append("steamid", steamId)
+                parameters.append("steamid", steamId.toString())
                 parameters.append("api_key", apiKey)
             }
         }
