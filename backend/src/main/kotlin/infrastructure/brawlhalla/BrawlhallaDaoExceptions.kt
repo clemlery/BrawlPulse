@@ -1,4 +1,4 @@
-package com.brawlpulse.api.common.exceptions
+package com.brawlpulse.api.infrastructure.brawlhalla
 
 sealed class BhApiException(
     message: String? = null,

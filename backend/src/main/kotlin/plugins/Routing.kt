@@ -1,15 +1,20 @@
 package com.brawlpulse.api.plugins
 
+import com.brawlpulse.api.features.player.PlayerRepositoryImpl
+import com.brawlpulse.api.features.player.PlayerService
+import com.brawlpulse.api.features.player.playerRoutes
+import com.brawlpulse.api.infrastructure.brawlhalla.BrawlhallaDao
 import io.ktor.http.*
-import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.Serializable
 
 fun Application.configureRouting() {
+    val bhApiKey = System.getProperty("BH_API_KEY") ?: error("BH_API_KEY not configured")
+    val playerService = PlayerService(BrawlhallaDao(), PlayerRepositoryImpl())
+
     install(Resources)
     install(StatusPages) {
         exception<Throwable> { call, cause ->
@@ -25,6 +30,6 @@ fun Application.configureRouting() {
                 TODO()
             }
         }
-
+        playerRoutes(playerService, bhApiKey)
     }
 }
