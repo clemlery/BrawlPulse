@@ -1,6 +1,6 @@
 package com.brawlpulse.api.features.snapshot
 
-import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsGlobal
+import com.brawlpulse.api.infrastructure.brawlhalla.models.LegendStats
 import java.time.OffsetDateTime
 import java.util.Date
 
@@ -12,6 +12,6 @@ data class DailySnapshot(
     val games : Int,
     val rating : Int,
     val peakRating : Int,
-    val legendsRaw : PlayerStatsGlobal,
+    val legendsRaw : List<LegendStats>,
     val createds : OffsetDateTime
 )
