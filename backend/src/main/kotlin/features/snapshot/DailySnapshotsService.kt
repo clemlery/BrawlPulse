@@ -1,14 +1,18 @@
 package com.brawlpulse.api.features.snapshot
 
 import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsGlobal
+import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsRanked
 
 class DailySnapshotsService(
-    snapshotsRepository: DailySnapshotsRepository
+    private val dailySnapshotsRepository: DailySnapshotsRepository
 ) {
 
-    suspend fun addInitialSnapshot(playerId : Int, playerStats : PlayerStatsGlobal) {
-
-        TODO()
+    suspend fun addFirstSnapshot(
+        playerId : Int,
+        playerStatsGlobal : PlayerStatsGlobal,
+        playerStatsRanked : PlayerStatsRanked
+    ) {
+        dailySnapshotsRepository.addFirstSnapshot(playerId, playerStatsGlobal, playerStatsRanked)
     }
 
     suspend fun addSnapshot(steamId : Long) {

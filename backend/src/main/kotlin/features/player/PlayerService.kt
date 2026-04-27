@@ -3,22 +3,33 @@ package com.brawlpulse.api.features.player
 import com.brawlpulse.api.features.player.exceptions.BrawlhallaApiUnavailableException
 import com.brawlpulse.api.features.player.exceptions.SteamIdNotLinkedException
 import com.brawlpulse.api.features.player.result.AddPlayerResult
+import com.brawlpulse.api.features.snapshot.DailySnapshotsRepository
+import com.brawlpulse.api.features.snapshot.DailySnapshotsService
 import com.brawlpulse.api.infrastructure.brawlhalla.BrawlhallaDao
 import com.brawlpulse.api.infrastructure.brawlhalla.InvalidApiKeyException
 import com.brawlpulse.api.infrastructure.brawlhalla.NotFoundException
 import com.brawlpulse.api.infrastructure.brawlhalla.RateLimitExceededException
 import com.brawlpulse.api.infrastructure.brawlhalla.ServerErrorException
 import com.brawlpulse.api.infrastructure.brawlhalla.UncoveredException
+import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsGlobal
+import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsRanked
+import com.brawlpulse.api.infrastructure.brawlhalla.models.SearchPlayerResponse
 import io.ktor.client.plugins.HttpRequestTimeoutException
 
 class PlayerService(
     private val bhClient : BrawlhallaDao,
-    private val playerRepository: PlayerRepository
+    private val playerRepository: PlayerRepository,
+    private val dailySnapshotsRepository: DailySnapshotsRepository
 ) {
 
     suspend fun addPlayer(steamId : Long, apiKey: String) : AddPlayerResult {
-        val searchPlayerResponse = try {
-            bhClient.searchPlayer(steamId, apiKey)
+        var searchPlayerResponse : SearchPlayerResponse
+        var playerStatsGlobal : PlayerStatsGlobal
+        var playerStatsRanked : PlayerStatsRanked
+        try {
+            searchPlayerResponse = bhClient.searchPlayer(steamId, apiKey)
+            playerStatsGlobal = bhClient.getPlayerGlobalStats(searchPlayerResponse.brawlhallaId, apiKey)
+            playerStatsRanked = bhClient.getPlayerRankedStats(searchPlayerResponse.brawlhallaId, apiKey)
         } catch (e: NotFoundException) {
             throw SteamIdNotLinkedException("SteamId : $steamId is not in brawlhalla's databases", e)
         } catch (e: RateLimitExceededException) {
@@ -39,8 +50,10 @@ class PlayerService(
                 searchPlayerResponse.brawlhallaId,
                 searchPlayerResponse.name
             )
+            dailySnapshotsRepository.addFirstSnapshot(player.brawlhallaId, playerStatsGlobal, playerStatsRanked)
             AddPlayerResult.Created(player)
         } else {
+            dailySnapshotsRepository.addDailySnapshot(player.brawlhallaId, playerStatsGlobal, playerStatsRanked)
             AddPlayerResult.AlreadyTracked(player)
         }
     }

@@ -13,5 +13,5 @@ data class DailySnapshot(
     val rating : Int,
     val peakRating : Int,
     val legendsRaw : List<LegendStats>,
-    val createds : OffsetDateTime
+    val createdAt : OffsetDateTime
 )
