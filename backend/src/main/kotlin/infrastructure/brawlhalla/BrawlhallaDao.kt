@@ -1,7 +1,7 @@
 package com.brawlpulse.api.infrastructure.brawlhalla
 
-import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsGlobalResponse
-import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsRankedResponse
+import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsGlobal
+import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsRanked
 import com.brawlpulse.api.infrastructure.brawlhalla.models.SearchPlayerResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -66,7 +66,7 @@ class BrawlhallaDao {
     suspend fun getPlayerGlobalStats(
         brawlhallaId: Int,
         apiKey : String
-    ) : PlayerStatsGlobalResponse {
+    ) : PlayerStatsGlobal {
         val response = client.get(Constants.GLOBAL_STATS_URL(brawlhallaId)) {
             url {
                 parameters.append("api_key", apiKey)
@@ -79,7 +79,7 @@ class BrawlhallaDao {
     suspend fun getPlayerRankedStats(
         brawlhallaId : Int,
         apiKey : String
-    ) : PlayerStatsRankedResponse{
+    ) : PlayerStatsRanked{
         val response = client.get(Constants.RANKED_STATS_URL(brawlhallaId)) {
             url {
                 parameters.append("api_key", apiKey)

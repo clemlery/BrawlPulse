@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PlayerStatsRankedResponse(
+data class PlayerStatsRanked(
     @SerialName("name") val name : String,
     @SerialName("brawlhalla_id") val brawlhallaId : Int,
     @SerialName("rating") val rating : Int,
