@@ -32,15 +32,15 @@ class BrawlhallaDao {
                 val exceptionResponse = clientException.response
                 val exceptionResponseText = exceptionResponse.bodyAsText()
                 when (exceptionResponse.status) {
-                    HttpStatusCode.Unauthorized -> throw IllegalStateException(exceptionResponseText)
-                    HttpStatusCode.Forbidden -> throw InvalidApiKeyException(exceptionResponseText)
+                    HttpStatusCode.Unauthorized -> throw IllegalStateException(exceptionResponseText, clientException)
+                    HttpStatusCode.Forbidden -> throw InvalidApiKeyException(exceptionResponseText, clientException)
                     HttpStatusCode.NotFound -> {
-                        if (exceptionResponseText.startsWith("Not Found")) throw NotFoundException(exceptionResponseText)
-                        else throw BadRequestException(exceptionResponseText)
+                        if (exceptionResponseText.startsWith("Not Found")) throw NotFoundException(exceptionResponseText, clientException)
+                        else throw BadRequestException(exceptionResponseText, clientException)
                     }
-                    HttpStatusCode.TooManyRequests -> throw RateLimitExceededException(exceptionResponseText)
-                    HttpStatusCode.ServiceUnavailable -> throw ServerErrorException(exceptionResponseText)
-                    else -> throw UncoveredException(exceptionResponseText)
+                    HttpStatusCode.TooManyRequests -> throw RateLimitExceededException(exceptionResponseText, clientException)
+                    HttpStatusCode.ServiceUnavailable -> throw ServerErrorException(exceptionResponseText, clientException)
+                    else -> throw UncoveredException(exceptionResponseText, clientException)
                 }
             }
         }

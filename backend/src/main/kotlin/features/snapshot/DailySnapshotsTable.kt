@@ -6,6 +6,7 @@ import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsGlobal
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ReferenceOption
+import org.jetbrains.exposed.sql.javatime.CurrentTimestampWithTimeZone
 import org.jetbrains.exposed.sql.javatime.date
 import org.jetbrains.exposed.sql.javatime.timestampWithTimeZone
 import org.jetbrains.exposed.sql.json.jsonb
@@ -23,4 +24,5 @@ object DailySnapshotsTable : IntIdTable("daily_snapshots") {
     val peakRating = integer("peak_rating")
     val legendsRaw = jsonb<List<LegendStats>>("legends_raw", json)
     val createdAt = timestampWithTimeZone("created_at")
+        .defaultExpression(CurrentTimestampWithTimeZone)
 }

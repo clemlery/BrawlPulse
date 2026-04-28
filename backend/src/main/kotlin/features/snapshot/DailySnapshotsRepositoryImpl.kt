@@ -4,6 +4,7 @@ import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsGlobal
 import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsRanked
 import com.brawlpulse.api.plugins.dbQuery
 import java.time.LocalDate
+import java.time.OffsetDateTime
 
 class DailySnapshotsRepositoryImpl : DailySnapshotsRepository {
 
@@ -20,6 +21,7 @@ class DailySnapshotsRepositoryImpl : DailySnapshotsRepository {
             rating = playerStatsRanked.rating
             peakRating = playerStatsRanked.peakRating
             legendsRaw = playerStatsGlobal.legends
+            createdAt = OffsetDateTime.now()
         })
     }
 
