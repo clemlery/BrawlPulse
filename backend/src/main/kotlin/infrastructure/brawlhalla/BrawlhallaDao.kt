@@ -1,7 +1,7 @@
 package com.brawlpulse.api.infrastructure.brawlhalla
 
-import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsGlobalResponse
-import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsRankedResponse
+import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsGlobal
+import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsRanked
 import com.brawlpulse.api.infrastructure.brawlhalla.models.SearchPlayerResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -32,15 +32,15 @@ class BrawlhallaDao {
                 val exceptionResponse = clientException.response
                 val exceptionResponseText = exceptionResponse.bodyAsText()
                 when (exceptionResponse.status) {
-                    HttpStatusCode.Unauthorized -> throw IllegalStateException(exceptionResponseText)
-                    HttpStatusCode.Forbidden -> throw InvalidApiKeyException(exceptionResponseText)
+                    HttpStatusCode.Unauthorized -> throw IllegalStateException(exceptionResponseText, clientException)
+                    HttpStatusCode.Forbidden -> throw InvalidApiKeyException(exceptionResponseText, clientException)
                     HttpStatusCode.NotFound -> {
-                        if (exceptionResponseText.startsWith("Not Found")) throw NotFoundException(exceptionResponseText)
-                        else throw BadRequestException(exceptionResponseText)
+                        if (exceptionResponseText.startsWith("Not Found")) throw NotFoundException(exceptionResponseText, clientException)
+                        else throw BadRequestException(exceptionResponseText, clientException)
                     }
-                    HttpStatusCode.TooManyRequests -> throw RateLimitExceededException(exceptionResponseText)
-                    HttpStatusCode.ServiceUnavailable -> throw ServerErrorException(exceptionResponseText)
-                    else -> throw UncoveredException(exceptionResponseText)
+                    HttpStatusCode.TooManyRequests -> throw RateLimitExceededException(exceptionResponseText, clientException)
+                    HttpStatusCode.ServiceUnavailable -> throw ServerErrorException(exceptionResponseText, clientException)
+                    else -> throw UncoveredException(exceptionResponseText, clientException)
                 }
             }
         }
@@ -66,7 +66,7 @@ class BrawlhallaDao {
     suspend fun getPlayerGlobalStats(
         brawlhallaId: Int,
         apiKey : String
-    ) : PlayerStatsGlobalResponse {
+    ) : PlayerStatsGlobal {
         val response = client.get(Constants.GLOBAL_STATS_URL(brawlhallaId)) {
             url {
                 parameters.append("api_key", apiKey)
@@ -79,7 +79,7 @@ class BrawlhallaDao {
     suspend fun getPlayerRankedStats(
         brawlhallaId : Int,
         apiKey : String
-    ) : PlayerStatsRankedResponse{
+    ) : PlayerStatsRanked{
         val response = client.get(Constants.RANKED_STATS_URL(brawlhallaId)) {
             url {
                 parameters.append("api_key", apiKey)

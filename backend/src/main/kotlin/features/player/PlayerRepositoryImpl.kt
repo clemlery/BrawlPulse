@@ -1,6 +1,8 @@
 package com.brawlpulse.api.features.player
 
+import com.brawlpulse.api.features.snapshot.daoToModel
 import com.brawlpulse.api.plugins.dbQuery
+import java.time.OffsetDateTime
 
 class PlayerRepositoryImpl : PlayerRepository {
 
@@ -13,6 +15,7 @@ class PlayerRepositoryImpl : PlayerRepository {
             steamId = newSteamId
             brawlhallaId = newBrawlhallaId
             currentName = newName
+            addedAt = OffsetDateTime.now()
         })
     }
 
@@ -20,8 +23,12 @@ class PlayerRepositoryImpl : PlayerRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getPlayer(steamId: Long): Player? {
-        TODO("Not yet implemented")
+    override suspend fun getPlayer(steamId: Long): Player? = dbQuery{
+        PlayerDAO
+            .find { (PlayerTable.steamId eq steamId) }
+            .limit(1)
+            .map(::daoToModel)
+            .firstOrNull()
     }
 
 }

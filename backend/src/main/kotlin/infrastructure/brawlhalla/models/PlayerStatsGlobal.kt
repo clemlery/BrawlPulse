@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PlayerStatsGlobalResponse(
+data class PlayerStatsGlobal(
     @SerialName("brawlhalla_id") val brawlhallaId: Int,
     @SerialName("name") val name: String,
     @SerialName("xp") val xp: Int,
@@ -22,5 +22,6 @@ data class PlayerStatsGlobalResponse(
     @SerialName("kospikeball") val koSpikeball: Int,
     @SerialName("kosidekick") val koSidekick: Int,
     @SerialName("kosnowball") val koSnowball: Int,
-    @SerialName("legends") val legends : List<LegendStats>
+    @SerialName("legends") val legends : List<LegendStats>,
+    @SerialName("clan") val clan : Clan
 )
