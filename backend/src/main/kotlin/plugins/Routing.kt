@@ -3,6 +3,8 @@ package com.brawlpulse.api.plugins
 import com.brawlpulse.api.features.player.PlayerRepositoryImpl
 import com.brawlpulse.api.features.player.PlayerService
 import com.brawlpulse.api.features.player.playerRoutes
+import com.brawlpulse.api.features.snapshot.DailySnapshotsRepositoryImpl
+import com.brawlpulse.api.features.snapshot.DailySnapshotsService
 import com.brawlpulse.api.infrastructure.brawlhalla.BrawlhallaDao
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -13,7 +15,8 @@ import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
     val bhApiKey = System.getProperty("BH_API_KEY") ?: error("BH_API_KEY not configured")
-    val playerService = PlayerService(BrawlhallaDao(), PlayerRepositoryImpl())
+    val dailySnapshotService = DailySnapshotsService(DailySnapshotsRepositoryImpl())
+    val playerService = PlayerService(BrawlhallaDao(), PlayerRepositoryImpl(), dailySnapshotService)
 
     install(Resources)
     install(StatusPages) {

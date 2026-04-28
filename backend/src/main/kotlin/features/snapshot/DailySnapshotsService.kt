@@ -7,16 +7,11 @@ class DailySnapshotsService(
     private val dailySnapshotsRepository: DailySnapshotsRepository
 ) {
 
-    suspend fun addFirstSnapshot(
+    suspend fun addDailySnapshot(
         playerId : Int,
         playerStatsGlobal : PlayerStatsGlobal,
         playerStatsRanked : PlayerStatsRanked
     ) {
-        dailySnapshotsRepository.addFirstSnapshot(playerId, playerStatsGlobal, playerStatsRanked)
+        dailySnapshotsRepository.addDailySnapshot(playerId, playerStatsGlobal, playerStatsRanked)
     }
-
-    suspend fun addSnapshot(steamId : Long) {
-        TODO()
-    }
-
 }

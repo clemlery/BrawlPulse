@@ -7,22 +7,6 @@ import java.time.LocalDate
 
 class DailySnapshotsRepositoryImpl : DailySnapshotsRepository {
 
-    override suspend fun addFirstSnapshot(
-        id: Int,
-        playerStatsGlobal: PlayerStatsGlobal,
-        playerStatsRanked: PlayerStatsRanked
-    ): DailySnapshot = dbQuery {
-        return@dbQuery daoToModel(DailySnapshotsDAO.new {
-            playerId = id
-            snapshotDate = LocalDate.now()
-            wins = playerStatsGlobal.wins
-            games = playerStatsGlobal.games
-            rating = playerStatsRanked.rating
-            peakRating = playerStatsRanked.peakRating
-            legendsRaw = playerStatsGlobal.legends
-        })
-    }
-
     override suspend fun addDailySnapshot(
         id: Int,
         playerStatsGlobal: PlayerStatsGlobal,

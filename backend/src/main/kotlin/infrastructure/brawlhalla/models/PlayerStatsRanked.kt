@@ -9,12 +9,13 @@ data class PlayerStatsRanked(
     @SerialName("brawlhalla_id") val brawlhallaId : Int,
     @SerialName("rating") val rating : Int,
     @SerialName("peak_rating") val peakRating : Int,
-    @SerialName("tier") val tier : Int,
+    @SerialName("tier") val tier : String,
     @SerialName("wins") val wins : Int,
     @SerialName("games") val games : Int,
     @SerialName("region") val region : String,
-    @SerialName("global_rank") val globalRank : Int,
-    @SerialName("region_rank") val regionRank : Int,
-    @SerialName("legends") val legends : List<LegendStats>,
-    @SerialName("2v2") val twosStats : List<TeamRank>
+    @SerialName("global_rank") val globalRank : Int, // 0 if less than top 1000
+    @SerialName("region_rank") val regionRank : Int, // 0 if less than top 1000
+    @SerialName("legends") val legends : List<LegendRank>,
+    @SerialName("2v2") val twosStats : List<TeamRank>,
+    @SerialName("rotating_ranked") val rotatingRanked : RotatingRanked
 )

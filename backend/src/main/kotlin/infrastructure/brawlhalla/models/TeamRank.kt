@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 @Serializable
 data class TeamRank(
     @SerialName("brawlhalla_id_one") val brawlhallaIdOne : Int,
-    @SerialName("brawlhalla_id_two") val brawlhallaIdTwo : Int,
+    @SerialName("brawlhalla_id_two") val brawlhallaIdTwo : Int, // 0 if Soloqueue
     @SerialName("rating") val rating : Int,
     @SerialName("peak_rating") val peakRating : Int,
     @SerialName("tier") val tier : String,

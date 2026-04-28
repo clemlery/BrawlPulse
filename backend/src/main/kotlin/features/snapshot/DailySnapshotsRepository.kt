@@ -5,8 +5,6 @@ import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsRanked
 
 interface DailySnapshotsRepository {
 
-    suspend fun addFirstSnapshot(id : Int, playerStatsGlobal: PlayerStatsGlobal, playerStatsRanked: PlayerStatsRanked) : DailySnapshot
-
     suspend fun addDailySnapshot(id : Int, playerStatsGlobal: PlayerStatsGlobal, playerStatsRanked: PlayerStatsRanked) : DailySnapshot
 
     suspend fun deleteAllSnapshots(steamId : Long)

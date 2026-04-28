@@ -22,5 +22,6 @@ data class PlayerStatsGlobal(
     @SerialName("kospikeball") val koSpikeball: Int,
     @SerialName("kosidekick") val koSidekick: Int,
     @SerialName("kosnowball") val koSnowball: Int,
-    @SerialName("legends") val legends : List<LegendStats>
+    @SerialName("legends") val legends : List<LegendStats>,
+    @SerialName("clan") val clan : Clan
 )

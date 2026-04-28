@@ -19,7 +19,7 @@ import io.ktor.client.plugins.HttpRequestTimeoutException
 class PlayerService(
     private val bhClient : BrawlhallaDao,
     private val playerRepository: PlayerRepository,
-    private val dailySnapshotsRepository: DailySnapshotsRepository
+    private val dailySnapshotService: DailySnapshotsService
 ) {
 
     suspend fun addPlayer(steamId : Long, apiKey: String) : AddPlayerResult {
@@ -44,17 +44,18 @@ class PlayerService(
             throw BrawlhallaApiUnavailableException("Unexpected Brawlhalla API error", e)
         }
         var player : Player? = playerRepository.getPlayer(steamId)
-        return if (player == null) {
+        var addPlayerResult : AddPlayerResult
+        if (player == null) {
             player = playerRepository.addPlayer(
                 steamId,
                 searchPlayerResponse.brawlhallaId,
                 searchPlayerResponse.name
             )
-            dailySnapshotsRepository.addFirstSnapshot(player.brawlhallaId, playerStatsGlobal, playerStatsRanked)
-            AddPlayerResult.Created(player)
+            addPlayerResult = AddPlayerResult.Created(player)
         } else {
-            dailySnapshotsRepository.addDailySnapshot(player.brawlhallaId, playerStatsGlobal, playerStatsRanked)
-            AddPlayerResult.AlreadyTracked(player)
+            addPlayerResult = AddPlayerResult.AlreadyTracked(player)
         }
+        dailySnapshotService.addDailySnapshot(player.brawlhallaId, playerStatsGlobal, playerStatsRanked)
+        return addPlayerResult
     }
 }
