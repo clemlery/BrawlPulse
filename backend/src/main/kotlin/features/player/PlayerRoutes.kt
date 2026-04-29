@@ -27,7 +27,7 @@ private fun Player.toResponse() = PlayerResponse(
 )
 
 fun Route.playerRoutes(playerService: PlayerService, bhApiKey: String) {
-    post("/player") {
+    post("/players") {
         val request = call.receive<AddPlayerRequest>()
         try {
             when (val result = playerService.addPlayer(request.steamId, bhApiKey)) {
@@ -41,17 +41,13 @@ fun Route.playerRoutes(playerService: PlayerService, bhApiKey: String) {
         }
     }
 
-    delete("/player/{steamId}") {
+    delete("/players/{steamId}") {
         val steamId : Long = call.parameters["steamId"]!!.toLongOrNull()
             ?: return@delete call.respond(HttpStatusCode.BadRequest, "Request failed because of invalid steamId : ${call.parameters["steamId"]}")
 
-        try {
-            when (val result = playerService.deletePlayer(steamId)) {
-                is DeletePlayerResult.Removed -> call.respond(HttpStatusCode.OK)
-                is DeletePlayerResult.NotFound -> call.respond(HttpStatusCode.NoContent, "Couldn't find player with steamId $steamId")
-            }
-        } catch (e: Exception) {
-            call.respondText(e.message ?: "Something wrong happened", status = HttpStatusCode.InternalServerError)
+        when (val result = playerService.deletePlayer(steamId)) {
+            is DeletePlayerResult.Removed -> call.respond(HttpStatusCode.NoContent)
+            is DeletePlayerResult.NotFound -> call.respond(HttpStatusCode.NotFound, "Couldn't find player with steamId $steamId")
         }
     }
 }
