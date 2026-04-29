@@ -17,13 +17,13 @@ import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsRanked
 import com.brawlpulse.api.infrastructure.brawlhalla.models.SearchPlayerResponse
 import io.ktor.client.plugins.HttpRequestTimeoutException
 
-class PlayerService(
+open class PlayerService(
     private val bhClient : BrawlhallaDao,
     private val playerRepository: PlayerRepository,
     private val dailySnapshotService: DailySnapshotsService
 ) {
 
-    suspend fun addPlayer(steamId : Long, apiKey: String) : AddPlayerResult {
+    open suspend fun addPlayer(steamId : Long, apiKey: String) : AddPlayerResult {
         var player : Player? = playerRepository.getPlayer(steamId)
         var addPlayerResult : AddPlayerResult
         if (player == null) {
@@ -60,7 +60,7 @@ class PlayerService(
         return addPlayerResult
     }
 
-    suspend fun deletePlayer(steamId : Long) : DeletePlayerResult {
+    open suspend fun deletePlayer(steamId : Long) : DeletePlayerResult {
         val isRemoved = playerRepository.deletePlayer(steamId)
         return if (isRemoved) {
             DeletePlayerResult.Removed
