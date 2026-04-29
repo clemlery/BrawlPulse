@@ -99,3 +99,7 @@ $RECYCLE.BIN/
 *.tmp
 *.cache
 .turbo/
+
+# Claude
+CLAUDE.md
+brawlhalla-api-audit.md
