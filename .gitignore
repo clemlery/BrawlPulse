@@ -100,6 +100,6 @@ $RECYCLE.BIN/
 *.cache
 .turbo/
 
-# Claude
+# Claude code
 CLAUDE.md
 brawlhalla-api-audit.md

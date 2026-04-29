@@ -6,7 +6,24 @@ ktor:
     port: ${API_PORT}
     host: ${API_HOST}
     scheme: ${API_SCHEME}
+
+    # Configuration Netty pour éviter les timeouts
+    runningLimit: 10
+    responseWriteTimeoutSeconds: 60
+    requestReadTimeoutSeconds: 60
+
+    # Configuration des thread pools Netty
+    connectionGroupSize: 2
+    workerGroupSize: 5
+    callGroupSize: 10
+
 jwt:
   domain: "https://jwt-provider-domain/"
   audience: "jwt-audience"
   realm: "ktor sample app"
+db:
+  jdbcUrl: "jdbc:postgresql://0.0.0.0:5432/brawlpulse"
+  driver: "org.postgresql.Driver"
+  username: ${POSTGRES_USER}
+  password: ${POSTGRES_PASSWORD}
+  maximumPoolSize: 5
