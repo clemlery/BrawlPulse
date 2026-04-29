@@ -6,6 +6,8 @@ services:
     restart: always
     depends_on:
       - server
+    env_file:
+      - ./bot/.env
   db:
     image: postgres:18
     restart: always

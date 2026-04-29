@@ -3,6 +3,7 @@ package com.brawlpulse.api.features.player
 import com.brawlpulse.api.features.player.exceptions.BrawlhallaApiUnavailableException
 import com.brawlpulse.api.features.player.exceptions.SteamIdNotLinkedException
 import com.brawlpulse.api.features.player.result.AddPlayerResult
+import com.brawlpulse.api.features.player.result.DeletePlayerResult
 import com.brawlpulse.api.features.snapshot.DailySnapshotsRepository
 import com.brawlpulse.api.features.snapshot.DailySnapshotsService
 import com.brawlpulse.api.infrastructure.brawlhalla.BrawlhallaDao
@@ -57,5 +58,14 @@ class PlayerService(
             addPlayerResult = AddPlayerResult.AlreadyTracked(player)
         }   
         return addPlayerResult
+    }
+
+    suspend fun deletePlayer(steamId : Long) : DeletePlayerResult {
+        val isRemoved = playerRepository.deletePlayer(steamId)
+        return if (isRemoved) {
+            DeletePlayerResult.Removed
+        } else {
+            DeletePlayerResult.NotFound(steamId)
+        }
     }
 }
