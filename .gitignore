@@ -103,3 +103,4 @@ $RECYCLE.BIN/
 # Claude code
 CLAUDE.md
 brawlhalla-api-audit.md
+.claude/

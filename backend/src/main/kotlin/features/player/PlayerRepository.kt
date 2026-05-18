@@ -12,4 +12,8 @@ interface PlayerRepository {
 
     suspend fun getPlayer(steamId : Long) : Player?
 
+    suspend fun getAllPlayers() : List<Player>
+
+    suspend fun updatePlayerName(id : Int, newName : String): Player?
+
 }
