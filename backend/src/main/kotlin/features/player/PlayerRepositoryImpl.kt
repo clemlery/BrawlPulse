@@ -36,6 +36,10 @@ class PlayerRepositoryImpl : PlayerRepository {
             .firstOrNull()
     }
 
+    override suspend fun getAllPlayers(): List<Player> = dbQuery {
+        PlayerDAO.all().map(::daoToModel)
+    }
+
     override suspend fun updatePlayerName(id :Int, newName: String): Player? = dbQuery {
         val playerDao = PlayerDAO
             .find { PlayerTable.id eq id }
