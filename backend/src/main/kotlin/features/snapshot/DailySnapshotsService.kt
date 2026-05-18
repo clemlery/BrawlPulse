@@ -8,9 +8,9 @@ class DailySnapshotsService(
 ) {
 
     suspend fun addDailySnapshot(
-        playerId : Int,
-        playerStatsGlobal : PlayerStatsGlobal,
-        playerStatsRanked : PlayerStatsRanked
+        playerId: Int,
+        playerStatsGlobal: PlayerStatsGlobal,
+        playerStatsRanked: PlayerStatsRanked
     ) {
         dailySnapshotsRepository.addDailySnapshot(playerId, playerStatsGlobal, playerStatsRanked)
     }
