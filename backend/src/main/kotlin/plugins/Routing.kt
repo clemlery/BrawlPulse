@@ -9,6 +9,7 @@ import com.brawlpulse.api.features.snapshot.DailySnapshotsService
 import com.brawlpulse.api.infrastructure.brawlhalla.BrawlhallaDao
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.authenticate
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.request.*
 import io.ktor.server.resources.*
@@ -55,17 +56,12 @@ fun Application.configureRouting() {
             }
         }
 
-        route("/admin") {
-            post("/snapshot/run") {
-                val bearer = call.request.header(HttpHeaders.Authorization)
-                    ?.removePrefix("Bearer ")
-                    ?.trim()
-                if (bearer != adminToken) {
-                    call.respond(HttpStatusCode.Unauthorized)
-                    return@post
+        authenticate("admin-auth") {
+            route("/admin") {
+                post("/snapshot/run") {
+                    schedulerScope.launch { snapshotJob.runDailySnapshot() }
+                    call.respond(HttpStatusCode.Accepted, "Snapshot job triggered")
                 }
-                schedulerScope.launch { snapshotJob.runDailySnapshot() }
-                call.respond(HttpStatusCode.Accepted, "Snapshot job triggered")
             }
         }
 
