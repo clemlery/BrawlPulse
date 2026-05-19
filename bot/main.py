@@ -14,6 +14,7 @@ load_dotenv()
 
 def main() -> None:
     token = os.getenv("DISCORD_TOKEN")
+    print(f'========= token : {token} =========')
     if not token:
         raise ValueError("DISCORD_TOKEN is not set in environment variables.")
 

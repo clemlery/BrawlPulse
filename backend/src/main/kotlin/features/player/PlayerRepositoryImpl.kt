@@ -1,6 +1,10 @@
 package com.brawlpulse.api.features.player
 
+import com.brawlpulse.api.features.snapshot.daoToModel
 import com.brawlpulse.api.plugins.dbQuery
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.deleteWhere
+import java.time.OffsetDateTime
 
 class PlayerRepositoryImpl : PlayerRepository {
 
@@ -9,19 +13,41 @@ class PlayerRepositoryImpl : PlayerRepository {
         newBrawlhallaId: Int,
         newName: String
     ): Player = dbQuery {
-        return@dbQuery daoToModel(PlayerDAO.new {
+        daoToModel(PlayerDAO.new {
             steamId = newSteamId
             brawlhallaId = newBrawlhallaId
             currentName = newName
+            addedAt = OffsetDateTime.now()
         })
     }
 
-    override suspend fun deletePlayer(steamId: Long) {
-        TODO("Not yet implemented")
+    override suspend fun deletePlayer(steamId: Long): Boolean = dbQuery {
+        val rowDeleted = PlayerTable.deleteWhere {
+            PlayerTable.steamId eq steamId
+        }
+        rowDeleted == 1
     }
 
-    override suspend fun getPlayer(steamId: Long): Player? {
-        TODO("Not yet implemented")
+    override suspend fun getPlayer(steamId: Long): Player? = dbQuery{
+        PlayerDAO
+            .find { (PlayerTable.steamId eq steamId) }
+            .limit(1)
+            .map(::daoToModel)
+            .firstOrNull()
+    }
+
+    override suspend fun getAllPlayers(): List<Player> = dbQuery {
+        PlayerDAO.all().map(::daoToModel)
+    }
+
+    override suspend fun updatePlayerName(id :Int, newName: String): Player? = dbQuery {
+        val playerDao = PlayerDAO
+            .find { PlayerTable.id eq id }
+            .limit(1)
+            .firstOrNull()
+            ?: return@dbQuery null
+        playerDao.currentName = newName
+        daoToModel(playerDao)
     }
 
 }

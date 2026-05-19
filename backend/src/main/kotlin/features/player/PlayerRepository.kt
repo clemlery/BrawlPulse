@@ -8,8 +8,12 @@ interface PlayerRepository {
         newName: String
     ) : Player
 
-    suspend fun deletePlayer(steamId : Long)
+    suspend fun deletePlayer(steamId : Long) : Boolean
 
     suspend fun getPlayer(steamId : Long) : Player?
+
+    suspend fun getAllPlayers() : List<Player>
+
+    suspend fun updatePlayerName(id : Int, newName : String): Player?
 
 }
