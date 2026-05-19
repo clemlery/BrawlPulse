@@ -20,6 +20,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 fun Application.configureRouting() {
     val bhApiKey = System.getProperty("BH_API_KEY") ?: error("BH_API_KEY not configured")
@@ -47,12 +49,18 @@ fun Application.configureRouting() {
     }
 
     routing {
-        route("/health") {
-            get("/live") {
-                call.respond(HttpStatusCode.OK)
-            }
-            get("/ready") {
-                TODO()
+        get("/health") {
+            try {
+                dbPing()
+                call.respond(HttpStatusCode.OK, buildJsonObject {
+                    put("status", "ok")
+                    put("db", "connected")
+                })
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.ServiceUnavailable, buildJsonObject {
+                    put("status", "error")
+                    put("db", "unreachable")
+                })
             }
         }
 

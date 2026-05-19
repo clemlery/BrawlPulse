@@ -59,3 +59,9 @@ suspend fun <T> dbQuery(block: suspend () -> T): T =
     newSuspendedTransaction(Dispatchers.IO, db = DbRegistry.database()) {
         block()
     }
+
+suspend fun dbPing() {
+    newSuspendedTransaction(Dispatchers.IO, db = DbRegistry.database()) {
+        exec("SELECT 1")
+    }
+}
