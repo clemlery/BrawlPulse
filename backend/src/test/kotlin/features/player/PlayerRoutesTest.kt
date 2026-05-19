@@ -3,6 +3,7 @@ package com.brawlpulse.api.features.player
 import com.brawlpulse.api.features.player.exceptions.BrawlhallaApiUnavailableException
 import com.brawlpulse.api.features.player.exceptions.SteamIdNotLinkedException
 import com.brawlpulse.api.features.player.result.AddPlayerResult
+import com.brawlpulse.api.features.player.result.DeletePlayerResult
 import com.brawlpulse.api.plugins.configureSerialization
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -109,6 +110,35 @@ class PlayerRoutesTest {
             contentType(ContentType.Application.Json)
             setBody("{}")
         }
+
+        assertEquals(HttpStatusCode.BadRequest, response.status)
+    }
+
+    @Test
+    fun `DELETE players returns 204 when player is removed`() = testApplication {
+        setupRouting()
+        coEvery { mockPlayerService.deletePlayer(testPlayer.steamId) } returns DeletePlayerResult.Removed
+
+        val response = client.delete("/players/${testPlayer.steamId}")
+
+        assertEquals(HttpStatusCode.NoContent, response.status)
+    }
+
+    @Test
+    fun `DELETE players returns 404 when player is not found`() = testApplication {
+        setupRouting()
+        coEvery { mockPlayerService.deletePlayer(testPlayer.steamId) } returns DeletePlayerResult.NotFound(testPlayer.steamId)
+
+        val response = client.delete("/players/${testPlayer.steamId}")
+
+        assertEquals(HttpStatusCode.NotFound, response.status)
+    }
+
+    @Test
+    fun `DELETE players returns 400 when steamId is not a number`() = testApplication {
+        setupRouting()
+
+        val response = client.delete("/players/not-a-number")
 
         assertEquals(HttpStatusCode.BadRequest, response.status)
     }
