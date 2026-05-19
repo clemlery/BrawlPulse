@@ -53,6 +53,7 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
     testImplementation("io.mockk:mockk:$mockk_version")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     implementation("com.zaxxer:HikariCP:${hikari_version}")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation("org.postgresql:postgresql:42.7.4")
