@@ -1,9 +1,15 @@
 package com.brawlpulse.api.features.snapshot
 
+import com.brawlpulse.api.features.player.PlayerTable
 import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsGlobal
 import com.brawlpulse.api.infrastructure.brawlhalla.models.PlayerStatsRanked
 import com.brawlpulse.api.plugins.dbQuery
+import org.jetbrains.exposed.sql.JoinType
+import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insertIgnore
+import org.jetbrains.exposed.sql.selectAll
 import java.time.LocalDate
 import java.time.OffsetDateTime
 
@@ -27,11 +33,34 @@ class DailySnapshotsRepositoryImpl : DailySnapshotsRepository {
         }
     }
 
-    override suspend fun deleteAllSnapshots(steamId: Long) {
-        TODO("Not yet implemented")
+    override suspend fun deleteAllSnapshots(steamId: Long): Unit = dbQuery {
+        val playerId = PlayerTable
+            .select(PlayerTable.id)
+            .where { PlayerTable.steamId eq steamId }
+            .singleOrNull()
+            ?.get(PlayerTable.id)
+            ?: return@dbQuery
+        DailySnapshotsTable.deleteWhere { DailySnapshotsTable.playerId eq playerId.value }
     }
 
-    override suspend fun getAllSnapshots(steamId: Long): List<DailySnapshot> {
-        TODO("Not yet implemented")
+    override suspend fun getAllSnapshots(steamId: Long): List<DailySnapshot> = dbQuery {
+        DailySnapshotsTable
+            .join(PlayerTable, JoinType.INNER, DailySnapshotsTable.playerId, PlayerTable.id)
+            .selectAll()
+            .where { PlayerTable.steamId eq steamId }
+            .orderBy(DailySnapshotsTable.snapshotDate to SortOrder.ASC)
+            .map { row ->
+                DailySnapshot(
+                    id = row[DailySnapshotsTable.id].value,
+                    playerId = row[DailySnapshotsTable.playerId],
+                    snapshotDate = row[DailySnapshotsTable.snapshotDate],
+                    wins = row[DailySnapshotsTable.wins],
+                    games = row[DailySnapshotsTable.games],
+                    rating = row[DailySnapshotsTable.rating],
+                    peakRating = row[DailySnapshotsTable.peakRating],
+                    legendsRaw = row[DailySnapshotsTable.legendsRaw],
+                    createdAt = row[DailySnapshotsTable.createdAt]
+                )
+            }
     }
 }
