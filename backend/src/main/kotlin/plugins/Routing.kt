@@ -6,12 +6,13 @@ import com.brawlpulse.api.features.player.playerRoutes
 import com.brawlpulse.api.features.snapshot.DailySnapshotJob
 import com.brawlpulse.api.features.snapshot.DailySnapshotsRepositoryImpl
 import com.brawlpulse.api.features.snapshot.DailySnapshotsService
+import com.brawlpulse.api.features.stats.PlayerStatsService
+import com.brawlpulse.api.features.stats.statsRoutes
 import com.brawlpulse.api.infrastructure.brawlhalla.BrawlhallaDao
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.authenticate
 import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.request.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -20,6 +21,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 fun Application.configureRouting() {
     val bhApiKey = System.getProperty("BH_API_KEY") ?: error("BH_API_KEY not configured")
@@ -30,6 +33,7 @@ fun Application.configureRouting() {
     val snapshotRepository = DailySnapshotsRepositoryImpl()
     val dailySnapshotService = DailySnapshotsService(snapshotRepository)
     val playerService = PlayerService(bhClient, playerRepository, dailySnapshotService)
+    val playerStatsService = PlayerStatsService(playerRepository, snapshotRepository)
 
     val snapshotJob = DailySnapshotJob(playerRepository, snapshotRepository, bhClient, bhApiKey)
 
@@ -47,12 +51,18 @@ fun Application.configureRouting() {
     }
 
     routing {
-        route("/health") {
-            get("/live") {
-                call.respond(HttpStatusCode.OK)
-            }
-            get("/ready") {
-                TODO()
+        get("/health") {
+            try {
+                dbPing()
+                call.respond(HttpStatusCode.OK, buildJsonObject {
+                    put("status", "ok")
+                    put("db", "connected")
+                })
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.ServiceUnavailable, buildJsonObject {
+                    put("status", "error")
+                    put("db", "unreachable")
+                })
             }
         }
 
@@ -66,5 +76,6 @@ fun Application.configureRouting() {
         }
 
         playerRoutes(playerService, bhApiKey)
+        statsRoutes(playerStatsService)
     }
 }
