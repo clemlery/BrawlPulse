@@ -30,8 +30,14 @@ backend/local.properties
 *.ipr
 
 # ------------------------------------------------------------
-#  Discord bot (Node.js)
+#  Discord bot (Python)
 # ------------------------------------------------------------
+__pycache__/
+*.pyc
+*.pyo
+bot/.venv/
+
+# Legacy Node.js artifacts
 bot/node_modules/
 bot/dist/
 bot/.npm/
