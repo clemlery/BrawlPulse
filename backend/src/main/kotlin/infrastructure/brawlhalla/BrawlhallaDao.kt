@@ -18,6 +18,8 @@ import io.ktor.serialization.kotlinx.json.*
 class BrawlhallaDao {
 
     private val client = HttpClient(CIO) {
+        // Without this, non-2xx responses skip HttpResponseValidator and fail later in body().
+        expectSuccess = true
         install(HttpRequestRetry) {
             maxRetries = 3
             retryIf { request, response ->
