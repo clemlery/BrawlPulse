@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS daily_snapshots (
     CONSTRAINT fk_player_id
     FOREIGN KEY (player_id)
     REFERENCES tracked_players(id)
+    ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX IF NOT EXISTS idx_player_id_snapshot_date ON daily_snapshots (player_id, snapshot_date DESC);
 
