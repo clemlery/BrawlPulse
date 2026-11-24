@@ -1,5 +1,4 @@
 val exposed_version: String by project
-val h2_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
 val hikari_version: String by project
@@ -40,7 +39,6 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-java-time:${exposed_version}")
     implementation("org.jetbrains.exposed:exposed-json:${exposed_version}")
     implementation("org.jetbrains.exposed:exposed-dao:${exposed_version}")
-    implementation("com.h2database:h2:$h2_version")
     implementation("io.ktor:ktor-server-resources")
     implementation("io.ktor:ktor-server-call-logging")
     implementation("io.ktor:ktor-server-host-common")
