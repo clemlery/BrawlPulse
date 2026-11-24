@@ -30,7 +30,6 @@ fun configureDatabases(config: ApplicationConfig) {
     }
 
     println("[DB] Configuration de la base de données...")
-    println("[DB] Password : ${config.property("db.password").getString()}")
 
     val hikariConfig = HikariConfig().apply {
         jdbcUrl = config.property("db.jdbcUrl").getString()
