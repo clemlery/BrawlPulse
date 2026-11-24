@@ -7,6 +7,9 @@ import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.slf4j.LoggerFactory
+
+private val logger = LoggerFactory.getLogger("com.brawlpulse.api.plugins.Databases")
 
 object DbRegistry {
     private var database: Database? = null
@@ -25,11 +28,11 @@ object DbRegistry {
 
 fun configureDatabases(config: ApplicationConfig) {
     if (DbRegistry.isConfigured()) {
-        println("[DB] Base de données déjà configurée, skip")
+        logger.info("Database already configured, skipping")
         return
     }
 
-    println("[DB] Configuration de la base de données...")
+    logger.info("Configuring database connection pool...")
 
     val hikariConfig = HikariConfig().apply {
         jdbcUrl = config.property("db.jdbcUrl").getString()
@@ -47,7 +50,7 @@ fun configureDatabases(config: ApplicationConfig) {
     val database = Database.connect(dataSource)
 
     DbRegistry.register(database, dataSource)
-    println("[DB] Base de données configurée avec succès")
+    logger.info("Database configured successfully")
 }
 
 fun Application.configureDatabases() {
