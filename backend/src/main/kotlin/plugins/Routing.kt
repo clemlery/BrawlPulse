@@ -12,9 +12,6 @@ import com.brawlpulse.api.infrastructure.brawlhalla.BrawlhallaDao
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.authenticate
-import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.request.httpMethod
-import io.ktor.server.request.path
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -45,20 +42,7 @@ fun Application.configureRouting() {
     environment.monitor.subscribe(ApplicationStopped) { schedulerScope.cancel() }
 
     install(Resources)
-    install(StatusPages) {
-        exception<Throwable> { call, cause ->
-            // Full details stay server-side; the client only gets a generic message.
-            call.application.log.error(
-                "Unhandled exception on {} {}",
-                call.request.httpMethod.value,
-                call.request.path(),
-                cause
-            )
-            call.respond(HttpStatusCode.InternalServerError, buildJsonObject {
-                put("error", "Internal server error")
-            })
-        }
-    }
+    configureStatusPages()
 
     routing {
         get("/health") {
