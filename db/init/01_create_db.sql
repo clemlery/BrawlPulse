@@ -30,23 +30,23 @@ CREATE INDEX idx_player_names_name ON player_names(name);
 COMMENT ON COLUMN tracked_players.steam_id IS 'Provided by the user for now';
 COMMENT ON COLUMN tracked_players.brawlhalla_id IS 'Resolved from the brawlhlla API';
 COMMENT ON COLUMN tracked_players.current_name IS 'Last known in game name';
-COMMENT ON COLUMN tracked_players.all_names IS 'All names changed by this player';
 COMMENT ON COLUMN tracked_players.added_at IS 'DEFAULT NOW()';
 
 -- daily_snapshots table
 CREATE TABLE IF NOT EXISTS daily_snapshots (
     id SERIAL PRIMARY KEY,
-    player_id INT,
-    snapshot_date DATE,
-    wins INT,
-    games INT,
-    rating INT,
-    peak_rating INT,
-    legends_raw JSONB,
-    created_at TIMESTAMPTZ,
+    player_id INT NOT NULL,
+    snapshot_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    wins INT NOT NULL,
+    games INT NOT NULL,
+    rating INT NOT NULL,
+    peak_rating INT NOT NULL,
+    legends_raw JSONB NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT fk_player_id
     FOREIGN KEY (player_id)
     REFERENCES tracked_players(id)
+    ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX IF NOT EXISTS idx_player_id_snapshot_date ON daily_snapshots (player_id, snapshot_date DESC);
 
