@@ -39,6 +39,11 @@ services:
       - backend
     env_file:
       - .env
+    environment:
+      # Inside the container Netty must listen on all interfaces, otherwise the
+      # published port and the other containers cannot reach it. Takes
+      # precedence over API_HOST from .env.
+      API_HOST: 0.0.0.0
     healthcheck:
       # CMD-SHELL so the container's shell expands API_PORT (CMD does no expansion).
       test: ["CMD-SHELL", "curl -fsS \"http://localhost:$${API_PORT}/health\" || exit 1"]
