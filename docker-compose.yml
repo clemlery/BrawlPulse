@@ -40,7 +40,8 @@ services:
     env_file:
       - .env
     healthcheck:
-      test: [ "CMD", "curl", "-f", "$$API_SCHEME://$$API_HOST:$$API_PORT/health" ]
+      # CMD-SHELL so the container's shell expands API_PORT (CMD does no expansion).
+      test: ["CMD-SHELL", "curl -fsS \"http://localhost:$${API_PORT}/health\" || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
