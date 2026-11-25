@@ -2,6 +2,9 @@ package com.brawlpulse.api.infrastructure.brawlhalla
 
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.headersOf
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
@@ -58,5 +61,33 @@ class BrawlhallaDaoTest {
 
         assertEquals(4, calls, "Expected 1 call + 3 retries")
         assertFalse(exception.fullStackTrace().contains(apiKey), "API key leaked in stack trace")
+    }
+
+    private fun daoRespondingJson(body: String) = BrawlhallaDao(MockEngine {
+        respond(
+            content = body,
+            status = HttpStatusCode.OK,
+            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+        )
+    })
+
+    @Test
+    fun `search with an unknown steam id maps the empty array to NotFoundException`() = runBlocking {
+        val dao = daoRespondingJson("[]")
+
+        assertFailsWith<NotFoundException> {
+            dao.searchPlayer(76561190000000000, apiKey)
+        }
+        Unit
+    }
+
+    @Test
+    fun `search with a linked steam id returns the player`() = runBlocking {
+        val dao = daoRespondingJson("""{"brawlhalla_id": 2, "name": "bmgtherealfirstdan"}""")
+
+        val player = dao.searchPlayer(76561198000000000, apiKey)
+
+        assertEquals(2, player.brawlhallaId)
+        assertEquals("bmgtherealfirstdan", player.name)
     }
 }

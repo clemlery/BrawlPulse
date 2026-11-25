@@ -16,6 +16,9 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
 
 class BrawlhallaDao(engine: HttpClientEngine = CIO.create()) {
 
@@ -68,7 +71,12 @@ class BrawlhallaDao(engine: HttpClientEngine = CIO.create()) {
             }
         }
 
-        return response.body()
+        // For an unknown Steam ID the API answers 200 with an empty array instead of a 404.
+        val body = response.body<JsonElement>()
+        if (body is JsonArray) {
+            throw NotFoundException("No Brawlhalla account linked to Steam ID $steamId")
+        }
+        return Json.decodeFromJsonElement(SearchPlayerResponse.serializer(), body)
     }
 
     suspend fun getPlayerGlobalStats(
