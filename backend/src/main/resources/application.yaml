@@ -22,7 +22,9 @@ jwt:
   audience: "jwt-audience"
   realm: "ktor sample app"
 db:
-  jdbcUrl: "jdbc:postgresql://0.0.0.0:5432/brawlpulse"
+  # Defaults to the docker compose "db" service. Override DB_JDBC_URL to run
+  # the backend outside Docker, e.g. jdbc:postgresql://localhost:5432/brawlpulse
+  jdbcUrl: "${DB_JDBC_URL:jdbc:postgresql://db:5432/brawlpulse}"
   driver: "org.postgresql.Driver"
   username: ${POSTGRES_USER}
   password: ${POSTGRES_PASSWORD}

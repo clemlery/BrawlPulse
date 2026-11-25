@@ -12,7 +12,6 @@ import com.brawlpulse.api.infrastructure.brawlhalla.BrawlhallaDao
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.authenticate
-import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -26,7 +25,6 @@ import kotlinx.serialization.json.put
 
 fun Application.configureRouting() {
     val bhApiKey = System.getProperty("BH_API_KEY") ?: error("BH_API_KEY not configured")
-    val adminToken = System.getProperty("ADMIN_TOKEN") ?: error("ADMIN_TOKEN not configured")
 
     val bhClient = BrawlhallaDao()
     val playerRepository = PlayerRepositoryImpl()
@@ -44,11 +42,7 @@ fun Application.configureRouting() {
     environment.monitor.subscribe(ApplicationStopped) { schedulerScope.cancel() }
 
     install(Resources)
-    install(StatusPages) {
-        exception<Throwable> { call, cause ->
-            call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
-        }
-    }
+    configureStatusPages()
 
     routing {
         get("/health") {

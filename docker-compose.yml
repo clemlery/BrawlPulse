@@ -17,7 +17,7 @@ services:
       - postgresql_data:/var/lib/postgresql
       - ./db/init:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready", "-d", "backend"]
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
       interval: 30s
       timeout: 60s
       retries: 5
@@ -31,15 +31,22 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - "${API_PORT}:${API_PORT}"
     networks:
       - backend
     env_file:
       - .env
+    environment:
+      # Inside the container Netty must listen on all interfaces, otherwise the
+      # published port and the other containers cannot reach it. Takes
+      # precedence over API_HOST from .env.
+      API_HOST: 0.0.0.0
     healthcheck:
-      test: [ "CMD", "curl", "-f", "$$API_SCHEME://$$API_HOST:$$API_PORT/health" ]
+      # CMD-SHELL so the container's shell expands API_PORT (CMD does no expansion).
+      test: ["CMD-SHELL", "curl -fsS \"http://localhost:$${API_PORT}/health\" || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
